@@ -12,6 +12,7 @@ import 'package:stack_trace/stack_trace.dart';
 import 'package:test/test.dart';
 
 import 'package:package_resolver/package_resolver.dart';
+import 'package:package_resolver/src/utils.dart';
 
 void main() {
   // It's important to test these, because they use PackageConfig.current and
@@ -38,12 +39,12 @@ void main() {
       } else {
         // If the isolate running this test isn't using package config, create
         // one from scratch with the same resolution semantics.
-        var map = {};
+        map = {};
         var root = p.fromUri(await PackageResolver.current.packageRoot);
         await for (var link in new Directory(root).list(followLinks: false)) {
           assert(link is Link);
           map[p.basename(link.path)] =
-              p.toUri(await link.resolveSymbolicLinks());
+              ensureTrailingSlash(p.toUri((await link.resolveSymbolicLinks())));
         }
       }
 
@@ -188,11 +189,22 @@ void main() {
   });
 }
 
-Future<String> get _packageResolverLibUri async =>
-    (await PackageResolver.current.urlFor("package_resolver")).toString();
+Future<String> get _packageResolverLibUri => _urlForPackage('package_resolver');
 
-Future<String> get _pathLibUri async =>
-    (await PackageResolver.current.urlFor("path")).toString();
+Future<String> get _pathLibUri => _urlForPackage('path');
+
+Future<String> _urlForPackage(String package) async {
+  var uri = await PackageResolver.current.urlFor(package);
+  if (await PackageResolver.current.packageConfigMap != null) {
+    return uri.toString();
+  }
+
+  // If we're using a package root, we resolve the symlinks in the test code so
+  // we need to resolve them here as well to ensure we're testing against the
+  // same values.
+  var resolved = new Directory(p.fromUri(uri)).resolveSymbolicLinksSync();
+  return ensureTrailingSlash(p.toUri(resolved)).toString();
+}
 
 Future _spawn(String expression, PackageResolver packageResolver) async {
   var data = new UriData.fromString("""
