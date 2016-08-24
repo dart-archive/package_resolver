@@ -77,6 +77,7 @@ Uri asUri(uri, String name) {
 ///
 /// If [uri] already ends in a slash, returns it as-is.
 Uri ensureTrailingSlash(Uri uri) {
+  if (uri.pathSegments.isEmpty) return uri.replace(path: "/");
   if (uri.pathSegments.last.isEmpty) return uri;
   return uri.replace(pathSegments: uri.pathSegments.toList()..add(""));
 }

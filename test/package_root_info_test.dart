@@ -22,6 +22,12 @@ void main() {
       expect(resolver.packageRoot, equals(Uri.parse("file:///foo/bar/")));
     });
 
+    test("with a URI without a path component", () {
+      var resolver =
+          new SyncPackageResolver.root(Uri.parse("http://localhost:1234"));
+      expect(resolver.packageRoot, equals(Uri.parse("http://localhost:1234/")));
+    });
+
     test("with an invalid URI type", () {
       expect(() => new SyncPackageResolver.root(12), throwsArgumentError);
     });
