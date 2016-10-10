@@ -141,7 +141,9 @@ void main() {
 
       var resolver = new SyncPackageResolver.root(p.toUri(packagesLink));
 
-      expect(resolver.packagePath("foo"), equals(p.join(sandbox, "foo")));
+      expect(resolver.packagePath("foo"),
+          equals(new Directory(p.join(sandbox, "foo"))
+              .resolveSymbolicLinksSync()));
       expect(resolver.packagePath("bar"), isNull);
     });
 
