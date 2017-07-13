@@ -4,10 +4,10 @@
 
 // TODO(nweiz): Avoid importing dart:io directly when cross-platform libraries
 // exist.
-import 'dart:io';
-import 'dart:isolate';
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
+import 'dart:isolate';
 
 import 'package:http/http.dart' as http;
 import 'package:package_config/packages_file.dart' as packages_file;
