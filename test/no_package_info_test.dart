@@ -30,8 +30,8 @@ void main() {
     });
 
     test("with a non-package URI", () {
-      expect(() => resolver.resolveUri("file:///zip/zap"),
-          throwsFormatException);
+      expect(
+          () => resolver.resolveUri("file:///zip/zap"), throwsFormatException);
     });
 
     test("with an invalid package URI", () {

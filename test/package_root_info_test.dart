@@ -74,8 +74,8 @@ void main() {
     });
 
     test("with a non-package URI", () {
-      expect(() => resolver.resolveUri("file:///zip/zap"),
-          throwsFormatException);
+      expect(
+          () => resolver.resolveUri("file:///zip/zap"), throwsFormatException);
     });
 
     test("with an invalid package URI", () {
@@ -120,8 +120,8 @@ void main() {
   group("packagePath", () {
     var sandbox;
     setUp(() async {
-      sandbox = (await Directory.systemTemp.createTemp("package_resolver_test"))
-          .path;
+      sandbox =
+          (await Directory.systemTemp.createTemp("package_resolver_test")).path;
     });
 
     tearDown(() async {
@@ -141,7 +141,8 @@ void main() {
 
       var resolver = new SyncPackageResolver.root(p.toUri(packagesLink));
 
-      expect(resolver.packagePath("foo"),
+      expect(
+          resolver.packagePath("foo"),
           equals(new Directory(p.join(sandbox, "foo"))
               .resolveSymbolicLinksSync()));
       expect(resolver.packagePath("bar"), isNull);

@@ -23,6 +23,7 @@ class CurrentIsolateResolver implements PackageResolver {
 
     return await loadConfigMap(url);
   }
+
   Map<String, Uri> _packageConfigMap;
 
   Future<Uri> get packageConfigUri => Isolate.packageConfig;

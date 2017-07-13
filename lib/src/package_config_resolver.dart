@@ -25,10 +25,10 @@ class PackageConfigResolver implements SyncPackageResolver {
     var buffer = new StringBuffer();
     packages_file.write(buffer, packageConfigMap, comment: "");
     _uri = new UriData.fromString(buffer.toString(),
-            parameters: {"charset": "utf-8"})
-        .uri;
+        parameters: {"charset": "utf-8"}).uri;
     return _uri;
   }
+
   Uri _uri;
 
   PackageResolver get asAsync => new AsyncPackageResolver(this);
@@ -58,7 +58,7 @@ class PackageConfigResolver implements SyncPackageResolver {
     if (uri.pathSegments.length == 1) return null;
 
     segments.addAll(uri.pathSegments.skip(1));
-    return baseUri.replace(pathSegments: segments);        
+    return baseUri.replace(pathSegments: segments);
   }
 
   Uri urlFor(String package, [String path]) {
