@@ -12,7 +12,7 @@ import 'package:test/test.dart';
 import 'package:package_resolver/package_resolver.dart';
 
 void main() {
-  var resolver;
+  SyncPackageResolver resolver;
   setUp(() {
     resolver = new SyncPackageResolver.config({
       "foo": Uri.parse("file:///foo/bar/"),
@@ -157,7 +157,7 @@ void main() {
 
     test("with a matching package", () {
       expect(resolver.packagePath("foo"), equals(p.current));
-    });
+    }, onPlatform: {'!vm': new Skip()});
 
     test("with a package with a non-file scheme", () {
       expect(resolver.packagePath("bar"), isNull);
@@ -245,5 +245,5 @@ void main() {
       expect(SyncPackageResolver.loadConfig("asdf:foo/bar"),
           throwsUnsupportedError);
     });
-  });
+  }, onPlatform: {'!vm': new Skip()});
 }
