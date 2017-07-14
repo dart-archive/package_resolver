@@ -152,5 +152,5 @@ void main() {
       var resolver = new SyncPackageResolver.root("http://dartlang.org/bar");
       expect(resolver.packagePath("foo"), isNull);
     });
-  }, onPlatform: {"!vm": new Skip()});
+  }, testOn: "vm");
 }

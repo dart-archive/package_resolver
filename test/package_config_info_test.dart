@@ -160,7 +160,7 @@ void main() {
 
     test("with a matching package", () {
       expect(resolver.packagePath("foo"), equals(p.current));
-    }, onPlatform: {'!vm': new Skip()});
+    }, testOn: "vm");
 
     test("with a package with a non-file scheme", () {
       expect(resolver.packagePath("bar"), isNull);
@@ -255,5 +255,5 @@ void main() {
       expect(SyncPackageResolver.loadConfig("asdf:foo/bar"),
           throwsUnsupportedError);
     });
-  }, onPlatform: {'!vm': new Skip()});
+  }, testOn: "vm");
 }
