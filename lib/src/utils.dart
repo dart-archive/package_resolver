@@ -4,10 +4,10 @@
 
 // TODO(nweiz): Avoid importing dart:io directly when cross-platform libraries
 // exist.
-import 'dart:io';
-import 'dart:isolate';
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
+import 'dart:isolate';
 
 import 'package:http/http.dart' as http;
 import 'package:package_config/packages_file.dart' as packages_file;
@@ -22,17 +22,14 @@ Future<Map<String, Uri>> loadConfigMap(Uri uri, {http.Client client}) async {
 
   var text;
   if (resolved.scheme == 'http') {
-    text = await (client == null
-        ? http.read(resolved)
-        : client.read(resolved));
+    text = await (client == null ? http.read(resolved) : client.read(resolved));
   } else if (resolved.scheme == 'file') {
     var path = resolved.toFilePath(windows: Platform.isWindows);
     text = await new File(path).readAsString();
   } else if (resolved.scheme == 'data') {
     text = resolved.data.contentAsString();
   } else if (resolved.scheme == 'package') {
-    return loadConfigMap(await Isolate.resolvePackageUri(uri),
-        client: client);
+    return loadConfigMap(await Isolate.resolvePackageUri(uri), client: client);
   } else {
     throw new UnsupportedError(
         'PackageInfo.loadConfig doesn\'t support URI scheme "${uri.scheme}:".');
@@ -52,11 +49,11 @@ Uri asPackageUri(uri, String name) {
   uri = asUri(uri, name);
 
   if (uri.scheme != 'package') {
-    throw new FormatException("Can only resolve a package: URI.",
-        uri.toString(), 0);
+    throw new FormatException(
+        "Can only resolve a package: URI.", uri.toString(), 0);
   } else if (uri.pathSegments.isEmpty) {
-    throw new FormatException("Expected package name.",
-        uri.toString(), "package:".length);
+    throw new FormatException(
+        "Expected package name.", uri.toString(), "package:".length);
   }
 
   return uri;

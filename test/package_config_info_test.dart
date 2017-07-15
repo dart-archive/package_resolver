@@ -12,7 +12,7 @@ import 'package:test/test.dart';
 import 'package:package_resolver/package_resolver.dart';
 
 void main() {
-  var resolver;
+  SyncPackageResolver resolver;
   setUp(() {
     resolver = new SyncPackageResolver.config({
       "foo": Uri.parse("file:///foo/bar/"),
@@ -35,10 +35,12 @@ void main() {
   });
 
   test("exposes the config map", () {
-    expect(resolver.packageConfigMap, equals({
-      "foo": Uri.parse("file:///foo/bar/"),
-      "bar": Uri.parse("http://dartlang.org/bar/")
-    }));
+    expect(
+        resolver.packageConfigMap,
+        equals({
+          "foo": Uri.parse("file:///foo/bar/"),
+          "bar": Uri.parse("http://dartlang.org/bar/")
+        }));
   });
 
   test("exposes the config URI if passed", () {
@@ -48,10 +50,11 @@ void main() {
 
   test("exposes a data: config URI if none is passed", () {
     resolver = new SyncPackageResolver.config(resolver.packageConfigMap);
-    expect(resolver.packageConfigUri, equals(Uri.parse(
-        "data:;charset=utf-8,"
-        "foo:file:///foo/bar/%0A"
-        "bar:http://dartlang.org/bar/%0A")));
+    expect(
+        resolver.packageConfigUri,
+        equals(Uri.parse("data:;charset=utf-8,"
+            "foo:file:///foo/bar/%0A"
+            "bar:http://dartlang.org/bar/%0A")));
   });
 
   test("exposes a null root", () {
@@ -59,8 +62,8 @@ void main() {
   });
 
   test("processArgument uses --packages", () {
-    expect(resolver.processArgument,
-        equals("--packages=file:///myapp/.packages"));
+    expect(
+        resolver.processArgument, equals("--packages=file:///myapp/.packages"));
   });
 
   group("resolveUri", () {
@@ -94,8 +97,8 @@ void main() {
     });
 
     test("with a non-package URI", () {
-      expect(() => resolver.resolveUri("file:///zip/zap"),
-          throwsFormatException);
+      expect(
+          () => resolver.resolveUri("file:///zip/zap"), throwsFormatException);
     });
 
     test("with an invalid package URI", () {
@@ -157,7 +160,7 @@ void main() {
 
     test("with a matching package", () {
       expect(resolver.packagePath("foo"), equals(p.current));
-    });
+    }, testOn: "vm");
 
     test("with a package with a non-file scheme", () {
       expect(resolver.packagePath("bar"), isNull);
@@ -172,8 +175,8 @@ void main() {
     var server;
     var sandbox;
     setUp(() async {
-      sandbox = (await Directory.systemTemp.createTemp("package_resolver_test"))
-          .path;
+      sandbox =
+          (await Directory.systemTemp.createTemp("package_resolver_test")).path;
     });
 
     tearDown(() async {
@@ -183,67 +186,74 @@ void main() {
 
     test("with an http: URI", () async {
       server = await shelf_io.serve((request) {
-        return new shelf.Response.ok(
-            "foo:file:///foo/bar/\n"
+        return new shelf.Response.ok("foo:file:///foo/bar/\n"
             "bar:http://dartlang.org/bar/");
       }, 'localhost', 0);
 
-      var resolver = await SyncPackageResolver.loadConfig(
-          "http://localhost:${server.port}");
+      var resolver = await SyncPackageResolver
+          .loadConfig("http://localhost:${server.port}");
 
-      expect(resolver.packageConfigMap, equals({
-        "foo": Uri.parse("file:///foo/bar/"),
-        "bar": Uri.parse("http://dartlang.org/bar/")
-      }));
+      expect(
+          resolver.packageConfigMap,
+          equals({
+            "foo": Uri.parse("file:///foo/bar/"),
+            "bar": Uri.parse("http://dartlang.org/bar/")
+          }));
       expect(resolver.packageConfigUri,
           equals(Uri.parse("http://localhost:${server.port}")));
     });
 
     test("with a file: URI", () async {
       var packagesPath = p.join(sandbox, ".packages");
-      new File(packagesPath).writeAsStringSync(
-          "foo:file:///foo/bar/\n"
+      new File(packagesPath).writeAsStringSync("foo:file:///foo/bar/\n"
           "bar:http://dartlang.org/bar/");
 
       var resolver =
           await SyncPackageResolver.loadConfig(p.toUri(packagesPath));
 
-      expect(resolver.packageConfigMap, equals({
-        "foo": Uri.parse("file:///foo/bar/"),
-        "bar": Uri.parse("http://dartlang.org/bar/")
-      }));
+      expect(
+          resolver.packageConfigMap,
+          equals({
+            "foo": Uri.parse("file:///foo/bar/"),
+            "bar": Uri.parse("http://dartlang.org/bar/")
+          }));
       expect(resolver.packageConfigUri, equals(p.toUri(packagesPath)));
     });
 
     test("with a data: URI", () async {
-      var data = Uri.parse(
-          "data:;charset=utf-8,"
+      var data = Uri.parse("data:;charset=utf-8,"
           "foo:file:///foo/bar/%0A"
           "bar:http://dartlang.org/bar/%0A");
       var resolver = await SyncPackageResolver.loadConfig(data);
 
-      expect(resolver.packageConfigMap, equals({
-        "foo": Uri.parse("file:///foo/bar/"),
-        "bar": Uri.parse("http://dartlang.org/bar/")
-      }));
+      expect(
+          resolver.packageConfigMap,
+          equals({
+            "foo": Uri.parse("file:///foo/bar/"),
+            "bar": Uri.parse("http://dartlang.org/bar/")
+          }));
       expect(resolver.packageConfigUri, equals(data));
     });
 
     test("with a package: URI", () async {
-      var resolver = await SyncPackageResolver.loadConfig(
-          "package:package_resolver/src/test_package_config");
+      var resolver = await SyncPackageResolver
+          .loadConfig("package:package_resolver/src/test_package_config");
 
-      expect(resolver.packageConfigMap, equals({
-        "foo": Uri.parse("file:///foo/bar/"),
-        "bar": Uri.parse("http://dartlang.org/bar/")
-      }));
-      expect(resolver.packageConfigUri, equals(Uri.parse(
-          "package:package_resolver/src/test_package_config")));
+      expect(
+          resolver.packageConfigMap,
+          equals({
+            "foo": Uri.parse("file:///foo/bar/"),
+            "bar": Uri.parse("http://dartlang.org/bar/")
+          }));
+      expect(
+          resolver.packageConfigUri,
+          equals(
+              Uri.parse("package:package_resolver/src/test_package_config")));
     });
 
     test("with an unsupported scheme", () {
       expect(SyncPackageResolver.loadConfig("asdf:foo/bar"),
           throwsUnsupportedError);
     });
-  });
+  }, testOn: "vm");
 }
