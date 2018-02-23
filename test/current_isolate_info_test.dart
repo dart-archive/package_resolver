@@ -59,17 +59,14 @@ void main() {
     });
 
     test("exposes the config map", () async {
-      expect(
-          await _spawn(
-              """() async {
+      expect(await _spawn("""() async {
         var serializable = {};
         (await PackageResolver.current.packageConfigMap)
             .forEach((package, uri) {
           serializable[package] = uri.toString();
         });
         return serializable;
-      }()""",
-              resolver),
+      }()""", resolver),
           containsPair("package_resolver", await _packageResolverLibUri));
     });
 
@@ -97,136 +94,95 @@ void main() {
 
     group("resolveUri", () {
       test("with a matching package", () async {
-        expect(
-            await _spawn(
-                """() async {
+        expect(await _spawn("""() async {
           var uri = await PackageResolver.current.resolveUri(
               'package:package_resolver/foo/bar.dart');
           return uri.toString();
-        }()""",
-                resolver),
+        }()""", resolver),
             equals(p.url.join(await _packageResolverLibUri, "foo/bar.dart")));
 
-        expect(
-            await _spawn(
-                """() async {
+        expect(await _spawn("""() async {
           var uri = await PackageResolver.current.resolveUri(
               'package:path/foo/bar.dart');
           return uri.toString();
-        }()""",
-                resolver),
+        }()""", resolver),
             equals(p.url.join(await _pathLibUri, "foo/bar.dart")));
       });
 
       test("with a matching package with no path", () async {
-        expect(
-            await _spawn(
-                """() async {
+        expect(await _spawn("""() async {
           var uri = await PackageResolver.current.resolveUri(
               'package:package_resolver');
           return uri == null;
-        }()""",
-                resolver),
-            isTrue);
+        }()""", resolver), isTrue);
 
-        expect(
-            await _spawn(
-                """() async {
+        expect(await _spawn("""() async {
           var uri = await PackageResolver.current.resolveUri('package:path');
           return uri == null;
-        }()""",
-                resolver),
-            isTrue);
+        }()""", resolver), isTrue);
       });
 
       test("with a matching package with an empty path", () async {
-        expect(
-            await _spawn(
-                """() async {
+        expect(await _spawn("""() async {
           var uri = await PackageResolver.current.resolveUri(
               'package:package_resolver/');
           return uri.toString();
-        }()""",
-                resolver),
-            (await _packageResolverLibUri).toString());
+        }()""", resolver), (await _packageResolverLibUri).toString());
 
-        expect(
-            await _spawn(
-                """() async {
+        expect(await _spawn("""() async {
           var uri = await PackageResolver.current.resolveUri('package:path/');
           return uri.toString();
-        }()""",
-                resolver),
-            (await _pathLibUri).toString());
+        }()""", resolver), (await _pathLibUri).toString());
       });
 
       test("with a URI object", () async {
-        expect(
-            await _spawn(
-                """() async {
+        expect(await _spawn("""() async {
           var uri = await PackageResolver.current.resolveUri(
               Uri.parse('package:package_resolver/foo/bar.dart'));
           return uri.toString();
-        }()""",
-                resolver),
+        }()""", resolver),
             equals(p.url.join(await _packageResolverLibUri, 'foo/bar.dart')));
       });
 
       test("with a non-matching package", () async {
-        expect(
-            await _spawn(
-                """() async {
+        expect(await _spawn("""() async {
           var uri = await PackageResolver.current.resolveUri(
               Uri.parse('package:not-a-package/foo/bar.dart'));
           return uri == null;
-        }()""",
-                resolver),
-            isTrue);
+        }()""", resolver), isTrue);
       });
 
       test("with an invalid argument type", () async {
-        expect(
-            await _spawn(
-                """() async {
+        expect(await _spawn("""() async {
           try {
             await PackageResolver.current.resolveUri(12);
             return false;
           } on ArgumentError catch (_) {
             return true;
           }
-        }()""",
-                resolver),
-            isTrue);
+        }()""", resolver), isTrue);
       });
 
       test("with a non-package URI", () async {
-        expect(
-            await _spawn(
-                """() async {
+        expect(await _spawn("""() async {
           try {
             await PackageResolver.current.resolveUri('file:///zip/zap');
             return false;
           } on FormatException catch (_) {
             return true;
           }
-        }()""",
-                resolver),
-            isTrue);
+        }()""", resolver), isTrue);
       });
 
       test("with an invalid package URI", () async {
-        expect(
-            await _spawn(
-                """() async {
+        expect(await _spawn("""() async {
           try {
             await PackageResolver.current.resolveUri("package:");
             return false;
           } on FormatException catch (_) {
             return true;
           }
-        }()""",
-                resolver),
-            isTrue);
+        }()""", resolver), isTrue);
       });
     });
   });
