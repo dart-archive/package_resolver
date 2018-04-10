@@ -35,7 +35,7 @@ Future<Map<String, Uri>> loadConfigMap(Uri uri, {http.Client client}) async {
         'PackageInfo.loadConfig doesn\'t support URI scheme "${uri.scheme}:".');
   }
 
-  return packages_file.parse(UTF8.encode(text), resolved);
+  return packages_file.parse(utf8.encode(text), resolved);
 }
 
 /// Converts [uri] to a [Uri] and verifies that it's a valid `package:` URI.
