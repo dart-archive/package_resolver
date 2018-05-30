@@ -36,7 +36,7 @@ void main() {
       var map;
       var currentIsolateMap = await PackageResolver.current.packageConfigMap;
       if (currentIsolateMap != null) {
-        map = new Map.from(currentIsolateMap);
+        map = new Map.of(currentIsolateMap);
       } else {
         // If the isolate running this test isn't using package config, create
         // one from scratch with the same resolution semantics.

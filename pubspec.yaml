@@ -1,11 +1,11 @@
 name: package_resolver
-version: 1.0.3
+version: 1.0.4-dev
 description: First-class package resolution strategy classes.
 author: Dart Team <misc@dartlang.org>
 homepage: https://github.com/dart-lang/package_resolver
 
 environment:
-  sdk: '>=2.0.0-dev.17.0 <2.0.0'
+  sdk: '>=2.0.0-dev.37.0 <2.0.0'
 
 dependencies:
   collection: '^1.9.0'
@@ -13,6 +13,6 @@ dependencies:
   package_config: '>=0.1.0 <2.0.0'
   path: '^1.0.0'
 dev_dependencies:
-  shelf: '^0.6.0'
+  shelf: '^0.7.0'
   test: '^0.12.0'
   stack_trace: '^1.9.2'
