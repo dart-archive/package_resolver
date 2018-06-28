@@ -9,7 +9,6 @@ import 'package:path/path.dart' as p;
 
 import 'package_config_resolver.dart';
 import 'package_resolver.dart';
-import 'package_root_resolver.dart';
 import 'sync_package_resolver.dart';
 import 'utils.dart';
 
@@ -28,12 +27,10 @@ class CurrentIsolateResolver implements PackageResolver {
 
   Future<Uri> get packageConfigUri => Isolate.packageConfig;
 
-  Future<Uri> get packageRoot => Isolate.packageRoot;
+  @deprecated
+  Future<Uri> get packageRoot => null;
 
   Future<SyncPackageResolver> get asSync async {
-    var root = await packageRoot;
-    if (root != null) return new PackageRootResolver(root);
-
     var map = await packageConfigMap;
 
     // It's hard to imagine how there would be no package resolution strategy
@@ -48,9 +45,6 @@ class CurrentIsolateResolver implements PackageResolver {
     var configUri = await packageConfigUri;
     if (configUri != null) return "--packages=$configUri";
 
-    var root = await packageRoot;
-    if (root != null) return "--package-root=$root";
-
     return null;
   }
 
@@ -62,10 +56,6 @@ class CurrentIsolateResolver implements PackageResolver {
 
   Future<Uri> packageUriFor(url) async => (await asSync).packageUriFor(url);
 
-  Future<String> packagePath(String package) async {
-    var root = await packageRoot;
-    if (root != null) return new PackageRootResolver(root).packagePath(package);
-
-    return p.dirname(p.fromUri(await urlFor(package)));
-  }
+  Future<String> packagePath(String package) async =>
+      p.dirname(p.fromUri(await urlFor(package)));
 }

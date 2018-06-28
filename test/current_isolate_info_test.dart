@@ -33,22 +33,7 @@ void main() {
   group("with a package config", () {
     var resolver;
     setUp(() async {
-      var map;
-      var currentIsolateMap = await PackageResolver.current.packageConfigMap;
-      if (currentIsolateMap != null) {
-        map = new Map.of(currentIsolateMap);
-      } else {
-        // If the isolate running this test isn't using package config, create
-        // one from scratch with the same resolution semantics.
-        map = {};
-        var root = p.fromUri(await PackageResolver.current.packageRoot);
-        await for (var link in new Directory(root).list(followLinks: false)) {
-          assert(link is Link);
-          map[p.basename(link.path)] =
-              ensureTrailingSlash(p.toUri((await link.resolveSymbolicLinks())));
-        }
-      }
-
+      var map = await PackageResolver.current.packageConfigMap;
       // Ensure that we have at least one URI that ends with "/" and one that
       // doesn't. Both of these cases need to be tested.
       expect(map["package_resolver"].path, endsWith("/"));
@@ -193,8 +178,14 @@ Future<String> get _packageResolverLibUri => _urlForPackage('package_resolver');
 Future<String> get _pathLibUri => _urlForPackage('path');
 
 Future<String> _urlForPackage(String package) async {
-  var uri = await PackageResolver.current.urlFor(package);
-  if (await PackageResolver.current.packageConfigMap != null) {
+  var current = PackageResolver.current;
+
+  var uri = await current.urlFor(package);
+  var path = await current.packagePath(package);
+
+  expect(uri, new Uri.file(p.join(path, 'lib/')));
+
+  if (await current.packageConfigMap != null) {
     return uri.toString();
   }
 
@@ -224,9 +215,7 @@ Future _spawn(String expression, PackageResolver packageResolver) async {
   var errorPort = new ReceivePort();
   try {
     var isolate = await Isolate.spawnUri(data.uri, [], receivePort.sendPort,
-        packageRoot: await packageResolver.packageRoot,
-        packageConfig: await packageResolver.packageConfigUri,
-        paused: true);
+        packageConfig: await packageResolver.packageConfigUri, paused: true);
 
     isolate.addErrorListener(errorPort.sendPort);
     errorPort.listen((message) {

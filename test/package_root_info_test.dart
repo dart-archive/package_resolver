@@ -10,7 +10,7 @@ import 'package:test/test.dart';
 import 'package:package_resolver/package_resolver.dart';
 
 void main() {
-  var resolver;
+  SyncPackageResolver resolver;
   setUp(() {
     resolver = new SyncPackageResolver.root("file:///foo/bar");
   });

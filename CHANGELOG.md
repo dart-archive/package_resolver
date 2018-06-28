@@ -1,5 +1,7 @@
 ## 1.0.4
 
+* Deprecate `PackageResolver.packageRoot`. It will always return `null`.
+
 * Set max SDK version to `<3.0.0`, and adjust other dependencies.
 
 ## 1.0.3

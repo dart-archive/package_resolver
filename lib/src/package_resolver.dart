@@ -36,9 +36,6 @@ abstract class PackageResolver {
   ///
   /// Note that for some implementations, loading the map may require IO
   /// operations that could fail.
-  ///
-  /// Completes to `null` when using a [packageRoot] for resolution, or when no
-  /// package resolution is being used.
   Future<Map<String, Uri>> get packageConfigMap;
 
   /// The URI for the package config.
@@ -50,15 +47,12 @@ abstract class PackageResolver {
   ///
   /// Note that if this is a `data:` URI, it may not be safe to pass as a
   /// parameter to a Dart process due to length limits.
-  ///
-  /// Completes to `null` when using a [packageRoot] for resolution, or when no
-  /// package resolution is being used.
   Future<Uri> get packageConfigUri;
 
-  /// The base URL for resolving `package:` URLs.
+  /// **DEPRECATED** Will always return `null`.
   ///
-  /// Completes to `null` when using a [packageConfigMap] for resolution, or
-  /// when no package resolution is being used.
+  /// Use [packageConfigMap] or [packageConfigUri] instead.
+  @deprecated
   Future<Uri> get packageRoot;
 
   /// Fetches the package resolution for [this] and returns an object that
@@ -70,8 +64,8 @@ abstract class PackageResolver {
   /// Returns the argument to pass to a subprocess to get it to use this package
   /// resolution strategy when resolving `package:` URIs.
   ///
-  /// This uses the `--package-root` or `--package` flags, which are the
-  /// conventions supported by the Dart VM and dart2js.
+  /// This uses the `--package-root` flag, which is the conventions supported by
+  /// the Dart VM and dart2js.
   ///
   /// Note that if [packageConfigUri] is a `data:` URI, it may be too large to
   /// pass on the command line.
