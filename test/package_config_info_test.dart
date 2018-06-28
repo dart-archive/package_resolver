@@ -190,8 +190,8 @@ void main() {
             "bar:http://dartlang.org/bar/");
       }, 'localhost', 0);
 
-      var resolver = await SyncPackageResolver
-          .loadConfig("http://localhost:${server.port}");
+      var resolver = await SyncPackageResolver.loadConfig(
+          "http://localhost:${server.port}");
 
       expect(
           resolver.packageConfigMap,
@@ -236,8 +236,8 @@ void main() {
     });
 
     test("with a package: URI", () async {
-      var resolver = await SyncPackageResolver
-          .loadConfig("package:package_resolver/src/test_package_config");
+      var resolver = await SyncPackageResolver.loadConfig(
+          "package:package_resolver/src/test_package_config");
 
       expect(
           resolver.packageConfigMap,
