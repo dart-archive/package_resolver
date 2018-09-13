@@ -1,3 +1,7 @@
+## 1.0.5
+
+* Use conditional imports to avoid dart:io imports on the web.
+
 ## 1.0.4
 
 * Set max SDK version to `<3.0.0`, and adjust other dependencies.
