@@ -2,8 +2,6 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'dart:io';
-
 import 'package:path/path.dart' as p;
 
 import 'async_package_resolver.dart';
@@ -48,12 +46,6 @@ class PackageRootResolver implements SyncPackageResolver {
     return Uri.parse("package:$relative");
   }
 
-  String packagePath(String package) {
-    if (packageRoot.scheme != 'file') return null;
-
-    var libLink = p.join(p.fromUri(packageRoot), package);
-    if (!new Link(libLink).existsSync()) return null;
-
-    return p.dirname(new Link(libLink).resolveSymbolicLinksSync());
-  }
+  String packagePath(String package) =>
+      packagePathForRoot(package, packageRoot);
 }

@@ -6,11 +6,15 @@
 // exist.
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
 import 'dart:isolate';
 
 import 'package:http/http.dart' as http;
 import 'package:package_config/packages_file.dart' as packages_file;
+
+// ignore: uri_does_not_exist
+import 'utils_stub.dart'
+    // ignore: uri_does_not_exist
+    if (dart.library.io) 'utils_io.dart' as conditional;
 
 /// Loads the configuration map from [uri].
 ///
@@ -24,8 +28,7 @@ Future<Map<String, Uri>> loadConfigMap(Uri uri, {http.Client client}) async {
   if (resolved.scheme == 'http') {
     text = await (client == null ? http.read(resolved) : client.read(resolved));
   } else if (resolved.scheme == 'file') {
-    var path = resolved.toFilePath(windows: Platform.isWindows);
-    text = await new File(path).readAsString();
+    text = await conditional.readFileAsString(resolved);
   } else if (resolved.scheme == 'data') {
     text = resolved.data.contentAsString();
   } else if (resolved.scheme == 'package') {
@@ -78,3 +81,6 @@ Uri ensureTrailingSlash(Uri uri) {
   if (uri.pathSegments.last.isEmpty) return uri;
   return uri.replace(pathSegments: uri.pathSegments.toList()..add(""));
 }
+
+String packagePathForRoot(String package, Uri root) =>
+    conditional.packagePathForRoot(package, root);
