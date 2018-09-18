@@ -1,3 +1,7 @@
+## 1.0.6
+
+* Support package:http version `0.12.x`.
+
 ## 1.0.5
 
 * Use conditional imports to avoid dart:io imports on the web.
