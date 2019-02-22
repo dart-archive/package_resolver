@@ -2,19 +2,20 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-// TODO(nweiz): Avoid importing dart:io directly when cross-platform libraries
-// exist.
 import 'dart:async';
 import 'dart:convert';
-import 'dart:isolate';
 
 import 'package:http/http.dart' as http;
 import 'package:package_config/packages_file.dart' as packages_file;
 
 // ignore: uri_does_not_exist
-import 'utils_stub.dart'
+import 'utils_io_stub.dart'
     // ignore: uri_does_not_exist
-    if (dart.library.io) 'utils_io.dart' as conditional;
+    if (dart.library.io) 'utils_io.dart' as io;
+// ignore: uri_does_not_exist
+import 'utils_isolate_stub.dart'
+    // ignore: uri_does_not_exist
+    if (dart.library.isolate) 'utils_isolate.dart' as isolate;
 
 /// Loads the configuration map from [uri].
 ///
@@ -28,11 +29,11 @@ Future<Map<String, Uri>> loadConfigMap(Uri uri, {http.Client client}) async {
   if (resolved.scheme == 'http') {
     text = await (client == null ? http.read(resolved) : client.read(resolved));
   } else if (resolved.scheme == 'file') {
-    text = await conditional.readFileAsString(resolved);
+    text = await io.readFileAsString(resolved);
   } else if (resolved.scheme == 'data') {
     text = resolved.data.contentAsString();
   } else if (resolved.scheme == 'package') {
-    return loadConfigMap(await Isolate.resolvePackageUri(uri), client: client);
+    return loadConfigMap(await isolate.resolvePackageUri(uri), client: client);
   } else {
     throw new UnsupportedError(
         'PackageInfo.loadConfig doesn\'t support URI scheme "${uri.scheme}:".');
@@ -83,4 +84,4 @@ Uri ensureTrailingSlash(Uri uri) {
 }
 
 String packagePathForRoot(String package, Uri root) =>
-    conditional.packagePathForRoot(package, root);
+    io.packagePathForRoot(package, root);

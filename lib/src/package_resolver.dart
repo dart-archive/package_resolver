@@ -6,10 +6,14 @@ import 'dart:async';
 
 import 'package:http/http.dart' as http;
 
-import 'current_isolate_resolver.dart';
 import 'package_config_resolver.dart';
 import 'package_root_resolver.dart';
 import 'sync_package_resolver.dart';
+
+// ignore: uri_does_not_exist
+import 'current_isolate_resolver_stub.dart'
+    // ignore: uri_does_not_exist
+    if (dart.library.isolate) 'current_isolate_resolver.dart' as isolate;
 
 /// A class that defines how to resolve `package:` URIs.
 ///
@@ -81,7 +85,7 @@ abstract class PackageResolver {
 
   /// Returns package resolution strategy describing how the current isolate
   /// resolves `package:` URIs.
-  static final PackageResolver current = new CurrentIsolateResolver();
+  static final PackageResolver current = isolate.currentIsolateResolver();
 
   /// Returns a package resolution strategy that is unable to resolve any
   /// `package:` URIs.
