@@ -14,7 +14,9 @@ import 'sync_package_resolver.dart';
 import 'utils.dart';
 
 /// The package resolution strategy used by the current isolate.
-class CurrentIsolateResolver implements PackageResolver {
+PackageResolver currentIsolateResolver() => _CurrentIsolateResolver();
+
+class _CurrentIsolateResolver implements PackageResolver {
   Future<Map<String, Uri>> get packageConfigMap async {
     if (_packageConfigMap != null) return _packageConfigMap;
 
