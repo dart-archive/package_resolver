@@ -1,3 +1,14 @@
+## 1.0.10
+
+* Use conditional imports to avoid `dart:isolate` imports on the web.
+* Bump minimum SDK to `2.1.0`.
+
+## 1.0.9
+
+* Identical to `1.0.6` - republishing with a higher version number to get around
+  issues with conditional `dart:isolate` imports on the version of
+  `build_modules` which is compatible with the `2.0.0` SDK.
+
 ## 1.0.8
 
 * Fix issue on Dart `2.0.0`.
