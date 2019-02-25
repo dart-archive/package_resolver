@@ -112,12 +112,12 @@ abstract class PackageResolver {
   /// fully-resolved. That is, any relative URIs in the original package config
   /// source should be resolved relative to its location.
   factory PackageResolver.config(Map<String, Uri> packageConfigMap, {uri}) =>
-      new PackageConfigResolver(packageConfigMap, uri: uri).asAsync;
+      PackageConfigResolver(packageConfigMap, uri: uri).asAsync;
 
   /// Returns the package resolution strategy for the given [packageRoot], which
   /// may be a [String] or a [Uri].
   factory PackageResolver.root(packageRoot) =>
-      new PackageRootResolver(packageRoot).asAsync;
+      PackageRootResolver(packageRoot).asAsync;
 
   /// Resolves [packageUri] according to this package resolution strategy.
   ///

@@ -16,7 +16,7 @@ class PackageRootResolver implements SyncPackageResolver {
 
   final Uri packageRoot;
 
-  PackageResolver get asAsync => new AsyncPackageResolver(this);
+  PackageResolver get asAsync => AsyncPackageResolver(this);
 
   String get processArgument => "--package-root=$packageRoot";
 

@@ -12,24 +12,23 @@ import 'package:package_resolver/package_resolver.dart';
 void main() {
   var resolver;
   setUp(() {
-    resolver = new SyncPackageResolver.root("file:///foo/bar");
+    resolver = SyncPackageResolver.root("file:///foo/bar");
   });
 
   group("constructor", () {
     test("with a URI object", () {
-      var resolver =
-          new SyncPackageResolver.root(Uri.parse("file:///foo/bar/"));
+      var resolver = SyncPackageResolver.root(Uri.parse("file:///foo/bar/"));
       expect(resolver.packageRoot, equals(Uri.parse("file:///foo/bar/")));
     });
 
     test("with a URI without a path component", () {
       var resolver =
-          new SyncPackageResolver.root(Uri.parse("http://localhost:1234"));
+          SyncPackageResolver.root(Uri.parse("http://localhost:1234"));
       expect(resolver.packageRoot, equals(Uri.parse("http://localhost:1234/")));
     });
 
     test("with an invalid URI type", () {
-      expect(() => new SyncPackageResolver.root(12), throwsArgumentError);
+      expect(() => SyncPackageResolver.root(12), throwsArgumentError);
     });
   });
 
@@ -125,31 +124,29 @@ void main() {
     });
 
     tearDown(() async {
-      await new Directory(sandbox).delete(recursive: true);
+      await Directory(sandbox).delete(recursive: true);
     });
 
     test("with a file: scheme", () async {
       var packageLib = p.join(sandbox, "foo/lib");
-      await new Directory(packageLib).create(recursive: true);
+      await Directory(packageLib).create(recursive: true);
 
       var packagesDir = p.join(sandbox, "packages");
       var fooLink = p.join(packagesDir, "foo");
-      await new Link(fooLink).create(packageLib, recursive: true);
+      await Link(fooLink).create(packageLib, recursive: true);
 
       var packagesLink = p.join(sandbox, "foo/packages");
-      await new Link(packagesLink).create(packagesDir);
+      await Link(packagesLink).create(packagesDir);
 
-      var resolver = new SyncPackageResolver.root(p.toUri(packagesLink));
+      var resolver = SyncPackageResolver.root(p.toUri(packagesLink));
 
-      expect(
-          resolver.packagePath("foo"),
-          equals(new Directory(p.join(sandbox, "foo"))
-              .resolveSymbolicLinksSync()));
+      expect(resolver.packagePath("foo"),
+          equals(Directory(p.join(sandbox, "foo")).resolveSymbolicLinksSync()));
       expect(resolver.packagePath("bar"), isNull);
     });
 
     test("without a file: scheme", () {
-      var resolver = new SyncPackageResolver.root("http://dartlang.org/bar");
+      var resolver = SyncPackageResolver.root("http://dartlang.org/bar");
       expect(resolver.packagePath("foo"), isNull);
     });
   }, testOn: "vm");

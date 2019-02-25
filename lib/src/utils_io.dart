@@ -8,14 +8,14 @@ import 'package:path/path.dart' as p;
 
 Future<String> readFileAsString(Uri uri) {
   var path = uri.toFilePath(windows: Platform.isWindows);
-  return new File(path).readAsString();
+  return File(path).readAsString();
 }
 
 String packagePathForRoot(String package, Uri root) {
   if (root.scheme != 'file') return null;
 
   var libLink = p.join(p.fromUri(root), package);
-  if (!new Link(libLink).existsSync()) return null;
+  if (!Link(libLink).existsSync()) return null;
 
-  return p.dirname(new Link(libLink).resolveSymbolicLinksSync());
+  return p.dirname(Link(libLink).resolveSymbolicLinksSync());
 }

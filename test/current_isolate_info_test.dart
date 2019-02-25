@@ -19,13 +19,13 @@ void main() {
   // PackageConfig.current.
   test("_packageResolverLibUri is correct", () async {
     var libPath = p.fromUri(await _packageResolverLibUri);
-    expect(new File(p.join(libPath, 'package_resolver.dart')).exists(),
+    expect(File(p.join(libPath, 'package_resolver.dart')).exists(),
         completion(isTrue));
   });
 
   test("_pathLibUri is correct", () async {
     var libPath = p.fromUri(await _pathLibUri);
-    expect(new File(p.join(libPath, 'path.dart')).exists(), completion(isTrue));
+    expect(File(p.join(libPath, 'path.dart')).exists(), completion(isTrue));
   });
 
   group("with a package config", () {
@@ -34,13 +34,13 @@ void main() {
       var map;
       var currentIsolateMap = await PackageResolver.current.packageConfigMap;
       if (currentIsolateMap != null) {
-        map = new Map.of(currentIsolateMap);
+        map = Map.of(currentIsolateMap);
       } else {
         // If the isolate running this test isn't using package config, create
         // one from scratch with the same resolution semantics.
         map = {};
         var root = p.fromUri(await PackageResolver.current.packageRoot);
-        await for (var link in new Directory(root).list(followLinks: false)) {
+        await for (var link in Directory(root).list(followLinks: false)) {
           assert(link is Link);
           map[p.basename(link.path)] =
               ensureTrailingSlash(p.toUri((await link.resolveSymbolicLinks())));
@@ -53,7 +53,7 @@ void main() {
       map["path"] = Uri.parse(p.url.normalize(map["path"].toString()));
       expect(map["path"].path, isNot(endsWith("/")));
 
-      resolver = new PackageResolver.config(map);
+      resolver = PackageResolver.config(map);
     });
 
     test("exposes the config map", () async {
@@ -199,12 +199,12 @@ Future<String> _urlForPackage(String package) async {
   // If we're using a package root, we resolve the symlinks in the test code so
   // we need to resolve them here as well to ensure we're testing against the
   // same values.
-  var resolved = new Directory(p.fromUri(uri)).resolveSymbolicLinksSync();
+  var resolved = Directory(p.fromUri(uri)).resolveSymbolicLinksSync();
   return ensureTrailingSlash(p.toUri(resolved)).toString();
 }
 
 Future _spawn(String expression, PackageResolver packageResolver) async {
-  var data = new UriData.fromString(
+  var data = UriData.fromString(
       """
     import 'dart:convert';
     import 'dart:isolate';
@@ -218,8 +218,8 @@ Future _spawn(String expression, PackageResolver packageResolver) async {
       mimeType: "application/dart",
       parameters: {"charset": "utf-8"});
 
-  var receivePort = new ReceivePort();
-  var errorPort = new ReceivePort();
+  var receivePort = ReceivePort();
+  var errorPort = ReceivePort();
   try {
     var isolate = await Isolate.spawnUri(data.uri, [], receivePort.sendPort,
         // ignore: deprecated_member_use
@@ -230,7 +230,7 @@ Future _spawn(String expression, PackageResolver packageResolver) async {
     isolate.addErrorListener(errorPort.sendPort);
     errorPort.listen((message) {
       registerException(
-          message[0], message[1] == null ? null : new Trace.parse(message[1]));
+          message[0], message[1] == null ? null : Trace.parse(message[1]));
       errorPort.close();
       receivePort.close();
     });
