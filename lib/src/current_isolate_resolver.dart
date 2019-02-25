@@ -30,6 +30,7 @@ class _CurrentIsolateResolver implements PackageResolver {
 
   Future<Uri> get packageConfigUri => Isolate.packageConfig;
 
+  // ignore: deprecated_member_use
   Future<Uri> get packageRoot => Isolate.packageRoot;
 
   Future<SyncPackageResolver> get asSync async {

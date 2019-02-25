@@ -1,3 +1,7 @@
+## 1.0.7+1
+
+* Fix issue on Dart `2.0.0`.
+
 ## 1.0.7
 
 * Use conditional imports to avoid `dart:isolate` imports on the web.

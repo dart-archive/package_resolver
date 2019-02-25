@@ -8,12 +8,11 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:isolate';
 
+import 'package:package_resolver/package_resolver.dart';
+import 'package:package_resolver/src/utils.dart';
 import 'package:path/path.dart' as p;
 import 'package:stack_trace/stack_trace.dart';
 import 'package:test/test.dart';
-
-import 'package:package_resolver/package_resolver.dart';
-import 'package:package_resolver/src/utils.dart';
 
 void main() {
   // It's important to test these, because they use PackageConfig.current and
@@ -224,6 +223,7 @@ Future _spawn(String expression, PackageResolver packageResolver) async {
   var errorPort = new ReceivePort();
   try {
     var isolate = await Isolate.spawnUri(data.uri, [], receivePort.sendPort,
+        // ignore: deprecated_member_use
         packageRoot: await packageResolver.packageRoot,
         packageConfig: await packageResolver.packageConfigUri,
         paused: true);
