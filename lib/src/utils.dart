@@ -34,7 +34,7 @@ Future<Map<String, Uri>> loadConfigMap(Uri uri, {http.Client client}) async {
   } else if (resolved.scheme == 'package') {
     return loadConfigMap(await isolate.resolvePackageUri(uri), client: client);
   } else {
-    throw new UnsupportedError(
+    throw UnsupportedError(
         'PackageInfo.loadConfig doesn\'t support URI scheme "${uri.scheme}:".');
   }
 
@@ -52,10 +52,10 @@ Uri asPackageUri(uri, String name) {
   uri = asUri(uri, name);
 
   if (uri.scheme != 'package') {
-    throw new FormatException(
+    throw FormatException(
         "Can only resolve a package: URI.", uri.toString(), 0);
   } else if (uri.pathSegments.isEmpty) {
-    throw new FormatException(
+    throw FormatException(
         "Expected package name.", uri.toString(), "package:".length);
   }
 
@@ -70,7 +70,7 @@ Uri asUri(uri, String name) {
   if (uri is Uri) return uri;
   if (uri is String) return Uri.parse(uri);
 
-  throw new ArgumentError.value(uri, name, "Must be a String or a Uri.");
+  throw ArgumentError.value(uri, name, "Must be a String or a Uri.");
 }
 
 /// Returns a copy of [uri] with a trailing slash.

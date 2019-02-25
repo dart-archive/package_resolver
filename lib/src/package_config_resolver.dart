@@ -22,16 +22,17 @@ class PackageConfigResolver implements SyncPackageResolver {
   Uri get packageConfigUri {
     if (_uri != null) return _uri;
 
-    var buffer = new StringBuffer();
+    var buffer = StringBuffer();
     packages_file.write(buffer, packageConfigMap, comment: "");
-    _uri = new UriData.fromString(buffer.toString(),
-        parameters: {"charset": "utf-8"}).uri;
+    _uri =
+        UriData.fromString(buffer.toString(), parameters: {"charset": "utf-8"})
+            .uri;
     return _uri;
   }
 
   Uri _uri;
 
-  PackageResolver get asAsync => new AsyncPackageResolver(this);
+  PackageResolver get asAsync => AsyncPackageResolver(this);
 
   String get processArgument => "--packages=$packageConfigUri";
 
@@ -42,7 +43,7 @@ class PackageConfigResolver implements SyncPackageResolver {
   /// Normalizes the URIs in [map] to ensure that they all end in a trailing
   /// slash.
   static Map<String, Uri> _normalizeMap(Map<String, Uri> map) =>
-      new UnmodifiableMapView(
+      UnmodifiableMapView(
           mapMap(map, value: (_, uri) => ensureTrailingSlash(uri)));
 
   Uri resolveUri(packageUri) {

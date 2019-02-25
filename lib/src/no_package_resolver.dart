@@ -14,7 +14,7 @@ class NoPackageResolver implements SyncPackageResolver {
   Uri get packageRoot => null;
   String get processArgument => null;
 
-  PackageResolver get asAsync => new AsyncPackageResolver(this);
+  PackageResolver get asAsync => AsyncPackageResolver(this);
 
   Uri resolveUri(packageUri) {
     // Verify that the URI is valid.

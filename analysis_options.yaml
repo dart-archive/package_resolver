@@ -1,1 +1,4 @@
-analyzer:
+linter:
+  rules:
+    - unnecessary_new
+    - unnecessary_const

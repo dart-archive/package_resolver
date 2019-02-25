@@ -87,7 +87,7 @@ abstract class SyncPackageResolver {
 
   /// Returns a package resolution strategy that is unable to resolve any
   /// `package:` URIs.
-  static final SyncPackageResolver none = new NoPackageResolver();
+  static final SyncPackageResolver none = NoPackageResolver();
 
   /// Loads a package config file from [uri] and returns its package resolution
   /// strategy.
@@ -101,8 +101,7 @@ abstract class SyncPackageResolver {
   static Future<SyncPackageResolver> loadConfig(uri,
       {http.Client client}) async {
     uri = asUri(uri, "uri");
-    return new SyncPackageResolver.config(
-        await loadConfigMap(uri, client: client),
+    return SyncPackageResolver.config(await loadConfigMap(uri, client: client),
         uri: uri);
   }
 

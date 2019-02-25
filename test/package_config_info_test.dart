@@ -14,7 +14,7 @@ import 'package:package_resolver/package_resolver.dart';
 void main() {
   SyncPackageResolver resolver;
   setUp(() {
-    resolver = new SyncPackageResolver.config({
+    resolver = SyncPackageResolver.config({
       "foo": Uri.parse("file:///foo/bar/"),
       "bar": Uri.parse("http://dartlang.org/bar")
     }, uri: "file:///myapp/.packages");
@@ -22,15 +22,15 @@ void main() {
 
   group("constructor", () {
     test("with a URI object", () {
-      var resolver = new SyncPackageResolver.config({},
+      var resolver = SyncPackageResolver.config({},
           uri: Uri.parse("file:///myapp/.packages"));
       expect(resolver.packageConfigUri,
           equals(Uri.parse("file:///myapp/.packages")));
     });
 
     test("with an invalid URI type", () {
-      expect(() => new SyncPackageResolver.config({}, uri: 12),
-          throwsArgumentError);
+      expect(
+          () => SyncPackageResolver.config({}, uri: 12), throwsArgumentError);
     });
   });
 
@@ -49,7 +49,7 @@ void main() {
   });
 
   test("exposes a data: config URI if none is passed", () {
-    resolver = new SyncPackageResolver.config(resolver.packageConfigMap);
+    resolver = SyncPackageResolver.config(resolver.packageConfigMap);
     expect(
         resolver.packageConfigUri,
         equals(Uri.parse("data:;charset=utf-8,"
@@ -152,7 +152,7 @@ void main() {
 
   group("packagePath", () {
     setUp(() {
-      resolver = new SyncPackageResolver.config({
+      resolver = SyncPackageResolver.config({
         "foo": p.toUri(p.join(p.current, 'lib')),
         "bar": Uri.parse("http://dartlang.org/bar")
       });
@@ -181,12 +181,12 @@ void main() {
 
     tearDown(() async {
       if (server != null) await server.close();
-      await new Directory(sandbox).delete(recursive: true);
+      await Directory(sandbox).delete(recursive: true);
     });
 
     test("with an http: URI", () async {
       server = await shelf_io.serve((request) {
-        return new shelf.Response.ok("foo:file:///foo/bar/\n"
+        return shelf.Response.ok("foo:file:///foo/bar/\n"
             "bar:http://dartlang.org/bar/");
       }, 'localhost', 0);
 
@@ -205,7 +205,7 @@ void main() {
 
     test("with a file: URI", () async {
       var packagesPath = p.join(sandbox, ".packages");
-      new File(packagesPath).writeAsStringSync("foo:file:///foo/bar/\n"
+      File(packagesPath).writeAsStringSync("foo:file:///foo/bar/\n"
           "bar:http://dartlang.org/bar/");
 
       var resolver =

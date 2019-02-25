@@ -34,7 +34,7 @@ class _CurrentIsolateResolver implements PackageResolver {
 
   Future<SyncPackageResolver> get asSync async {
     var root = await packageRoot;
-    if (root != null) return new PackageRootResolver(root);
+    if (root != null) return PackageRootResolver(root);
 
     var map = await packageConfigMap;
 
@@ -43,7 +43,7 @@ class _CurrentIsolateResolver implements PackageResolver {
     // to handle that case so we do.
     if (map == null) return SyncPackageResolver.none;
 
-    return new PackageConfigResolver(map, uri: await packageConfigUri);
+    return PackageConfigResolver(map, uri: await packageConfigUri);
   }
 
   Future<String> get processArgument async {
@@ -66,7 +66,7 @@ class _CurrentIsolateResolver implements PackageResolver {
 
   Future<String> packagePath(String package) async {
     var root = await packageRoot;
-    if (root != null) return new PackageRootResolver(root).packagePath(package);
+    if (root != null) return PackageRootResolver(root).packagePath(package);
 
     return p.dirname(p.fromUri(await urlFor(package)));
   }
