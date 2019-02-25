@@ -2,14 +2,13 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-import 'dart:async';
 import 'dart:io';
 
 import 'package:path/path.dart' as p;
 
-Future<String> readFileAsString(Uri uri) async {
+Future<String> readFileAsString(Uri uri) {
   var path = uri.toFilePath(windows: Platform.isWindows);
-  return await new File(path).readAsString();
+  return new File(path).readAsString();
 }
 
 String packagePathForRoot(String package, Uri root) {
