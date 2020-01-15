@@ -53,10 +53,10 @@ Uri asPackageUri(uri, String name) {
 
   if (uri.scheme != 'package') {
     throw FormatException(
-        "Can only resolve a package: URI.", uri.toString(), 0);
+        'Can only resolve a package: URI.', uri.toString(), 0);
   } else if (uri.pathSegments.isEmpty) {
     throw FormatException(
-        "Expected package name.", uri.toString(), "package:".length);
+        'Expected package name.', uri.toString(), 'package:'.length);
   }
 
   return uri;
@@ -70,16 +70,16 @@ Uri asUri(uri, String name) {
   if (uri is Uri) return uri;
   if (uri is String) return Uri.parse(uri);
 
-  throw ArgumentError.value(uri, name, "Must be a String or a Uri.");
+  throw ArgumentError.value(uri, name, 'Must be a String or a Uri.');
 }
 
 /// Returns a copy of [uri] with a trailing slash.
 ///
 /// If [uri] already ends in a slash, returns it as-is.
 Uri ensureTrailingSlash(Uri uri) {
-  if (uri.pathSegments.isEmpty) return uri.replace(path: "/");
+  if (uri.pathSegments.isEmpty) return uri.replace(path: '/');
   if (uri.pathSegments.last.isEmpty) return uri;
-  return uri.replace(pathSegments: uri.pathSegments.toList()..add(""));
+  return uri.replace(pathSegments: uri.pathSegments.toList()..add(''));
 }
 
 String packagePathForRoot(String package, Uri root) =>

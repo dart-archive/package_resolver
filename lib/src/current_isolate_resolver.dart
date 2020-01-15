@@ -16,6 +16,7 @@ import 'utils.dart';
 PackageResolver currentIsolateResolver() => _CurrentIsolateResolver();
 
 class _CurrentIsolateResolver implements PackageResolver {
+  @override
   Future<Map<String, Uri>> get packageConfigMap async {
     if (_packageConfigMap != null) return _packageConfigMap;
 
@@ -27,11 +28,14 @@ class _CurrentIsolateResolver implements PackageResolver {
 
   Map<String, Uri> _packageConfigMap;
 
+  @override
   Future<Uri> get packageConfigUri => Isolate.packageConfig;
 
   // ignore: deprecated_member_use
+  @override
   Future<Uri> get packageRoot => Isolate.packageRoot;
 
+  @override
   Future<SyncPackageResolver> get asSync async {
     var root = await packageRoot;
     if (root != null) return PackageRootResolver(root);
@@ -46,24 +50,29 @@ class _CurrentIsolateResolver implements PackageResolver {
     return PackageConfigResolver(map, uri: await packageConfigUri);
   }
 
+  @override
   Future<String> get processArgument async {
     var configUri = await packageConfigUri;
-    if (configUri != null) return "--packages=$configUri";
+    if (configUri != null) return '--packages=$configUri';
 
     var root = await packageRoot;
-    if (root != null) return "--package-root=$root";
+    if (root != null) return '--package-root=$root';
 
     return null;
   }
 
+  @override
   Future<Uri> resolveUri(packageUri) =>
-      Isolate.resolvePackageUri(asPackageUri(packageUri, "packageUri"));
+      Isolate.resolvePackageUri(asPackageUri(packageUri, 'packageUri'));
 
+  @override
   Future<Uri> urlFor(String package, [String path]) =>
       Isolate.resolvePackageUri(Uri.parse("package:$package/${path ?? ''}"));
 
+  @override
   Future<Uri> packageUriFor(url) async => (await asSync).packageUriFor(url);
 
+  @override
   Future<String> packagePath(String package) async {
     var root = await packageRoot;
     if (root != null) return PackageRootResolver(root).packagePath(package);

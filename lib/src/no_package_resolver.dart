@@ -9,26 +9,35 @@ import 'utils.dart';
 
 /// A package resolution strategy that is unable to resolve any `package:` URIs.
 class NoPackageResolver implements SyncPackageResolver {
+  @override
   Map<String, Uri> get packageConfigMap => null;
+  @override
   Uri get packageConfigUri => null;
+  @override
   Uri get packageRoot => null;
+  @override
   String get processArgument => null;
 
+  @override
   PackageResolver get asAsync => AsyncPackageResolver(this);
 
+  @override
   Uri resolveUri(packageUri) {
     // Verify that the URI is valid.
-    asPackageUri(packageUri, "packageUri");
+    asPackageUri(packageUri, 'packageUri');
     return null;
   }
 
+  @override
   Uri urlFor(String package, [String path]) => null;
 
+  @override
   Uri packageUriFor(url) {
     // Verify that the URI is a valid type.
-    asUri(url, "url");
+    asUri(url, 'url');
     return null;
   }
 
+  @override
   String packagePath(String package) => null;
 }

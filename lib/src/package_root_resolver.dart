@@ -11,41 +11,50 @@ import 'utils.dart';
 
 /// A package resolution strategy based on a package root URI.
 class PackageRootResolver implements SyncPackageResolver {
+  @override
   final packageConfigMap = null;
+  @override
   final packageConfigUri = null;
 
+  @override
   final Uri packageRoot;
 
+  @override
   PackageResolver get asAsync => AsyncPackageResolver(this);
 
-  String get processArgument => "--package-root=$packageRoot";
+  @override
+  String get processArgument => '--package-root=$packageRoot';
 
   PackageRootResolver(packageRoot)
-      : packageRoot = ensureTrailingSlash(asUri(packageRoot, "packageRoot"));
+      : packageRoot = ensureTrailingSlash(asUri(packageRoot, 'packageRoot'));
 
+  @override
   Uri resolveUri(packageUri) {
-    packageUri = asPackageUri(packageUri, "packageUri");
+    packageUri = asPackageUri(packageUri, 'packageUri');
 
     // Following [Isolate.resolvePackageUri], "package:foo" resolves to null.
     if (packageUri.pathSegments.length == 1) return null;
     return packageRoot.resolve(packageUri.path);
   }
 
+  @override
   Uri urlFor(String package, [String path]) {
-    var result = packageRoot.resolve("$package/");
+    var result = packageRoot.resolve('$package/');
     return path == null ? result : result.resolve(path);
   }
 
+  @override
   Uri packageUriFor(url) {
     var packageRootString = packageRoot.toString();
-    url = asUri(url, "url").toString();
+    url = asUri(url, 'url').toString();
     if (!p.url.isWithin(packageRootString, url)) return null;
 
     var relative = p.url.relative(url, from: packageRootString);
-    if (!relative.contains("/")) relative += "/";
-    return Uri.parse("package:$relative");
+    if (!relative.contains('/')) relative += '/';
+    return Uri.parse('package:$relative');
   }
 
+  @override
   String packagePath(String package) =>
       packagePathForRoot(package, packageRoot);
 }

@@ -100,7 +100,7 @@ abstract class SyncPackageResolver {
   /// [uri] may be a [String] or a [Uri].
   static Future<SyncPackageResolver> loadConfig(uri,
       {http.Client client}) async {
-    uri = asUri(uri, "uri");
+    uri = asUri(uri, 'uri');
     return SyncPackageResolver.config(await loadConfigMap(uri, client: client),
         uri: uri);
   }

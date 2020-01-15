@@ -15,168 +15,168 @@ void main() {
   SyncPackageResolver resolver;
   setUp(() {
     resolver = SyncPackageResolver.config({
-      "foo": Uri.parse("file:///foo/bar/"),
-      "bar": Uri.parse("http://dartlang.org/bar")
-    }, uri: "file:///myapp/.packages");
+      'foo': Uri.parse('file:///foo/bar/'),
+      'bar': Uri.parse('http://dartlang.org/bar')
+    }, uri: 'file:///myapp/.packages');
   });
 
-  group("constructor", () {
-    test("with a URI object", () {
+  group('constructor', () {
+    test('with a URI object', () {
       var resolver = SyncPackageResolver.config({},
-          uri: Uri.parse("file:///myapp/.packages"));
+          uri: Uri.parse('file:///myapp/.packages'));
       expect(resolver.packageConfigUri,
-          equals(Uri.parse("file:///myapp/.packages")));
+          equals(Uri.parse('file:///myapp/.packages')));
     });
 
-    test("with an invalid URI type", () {
+    test('with an invalid URI type', () {
       expect(
           () => SyncPackageResolver.config({}, uri: 12), throwsArgumentError);
     });
   });
 
-  test("exposes the config map", () {
+  test('exposes the config map', () {
     expect(
         resolver.packageConfigMap,
         equals({
-          "foo": Uri.parse("file:///foo/bar/"),
-          "bar": Uri.parse("http://dartlang.org/bar/")
+          'foo': Uri.parse('file:///foo/bar/'),
+          'bar': Uri.parse('http://dartlang.org/bar/')
         }));
   });
 
-  test("exposes the config URI if passed", () {
+  test('exposes the config URI if passed', () {
     expect(resolver.packageConfigUri,
-        equals(Uri.parse("file:///myapp/.packages")));
+        equals(Uri.parse('file:///myapp/.packages')));
   });
 
-  test("exposes a data: config URI if none is passed", () {
+  test('exposes a data: config URI if none is passed', () {
     resolver = SyncPackageResolver.config(resolver.packageConfigMap);
     expect(
         resolver.packageConfigUri,
-        equals(Uri.parse("data:;charset=utf-8,"
-            "foo:file:///foo/bar/%0A"
-            "bar:http://dartlang.org/bar/%0A")));
+        equals(Uri.parse('data:;charset=utf-8,'
+            'foo:file:///foo/bar/%0A'
+            'bar:http://dartlang.org/bar/%0A')));
   });
 
-  test("exposes a null root", () {
+  test('exposes a null root', () {
     expect(resolver.packageRoot, isNull);
   });
 
-  test("processArgument uses --packages", () {
+  test('processArgument uses --packages', () {
     expect(
-        resolver.processArgument, equals("--packages=file:///myapp/.packages"));
+        resolver.processArgument, equals('--packages=file:///myapp/.packages'));
   });
 
-  group("resolveUri", () {
-    test("with a matching package", () {
-      expect(resolver.resolveUri("package:foo/bang/qux.dart"),
-          equals(Uri.parse("file:///foo/bar/bang/qux.dart")));
-      expect(resolver.resolveUri("package:bar/bang/qux.dart"),
-          equals(Uri.parse("http://dartlang.org/bar/bang/qux.dart")));
+  group('resolveUri', () {
+    test('with a matching package', () {
+      expect(resolver.resolveUri('package:foo/bang/qux.dart'),
+          equals(Uri.parse('file:///foo/bar/bang/qux.dart')));
+      expect(resolver.resolveUri('package:bar/bang/qux.dart'),
+          equals(Uri.parse('http://dartlang.org/bar/bang/qux.dart')));
     });
 
-    test("with a matching package with no path", () {
-      expect(resolver.resolveUri("package:foo"), isNull);
+    test('with a matching package with no path', () {
+      expect(resolver.resolveUri('package:foo'), isNull);
     });
 
-    test("with a matching package with an empty path", () {
-      expect(resolver.resolveUri("package:bar/"),
-          equals(Uri.parse("http://dartlang.org/bar/")));
+    test('with a matching package with an empty path', () {
+      expect(resolver.resolveUri('package:bar/'),
+          equals(Uri.parse('http://dartlang.org/bar/')));
     });
 
-    test("with a URI object", () {
-      expect(resolver.resolveUri(Uri.parse("package:foo/bang/qux.dart")),
-          equals(Uri.parse("file:///foo/bar/bang/qux.dart")));
+    test('with a URI object', () {
+      expect(resolver.resolveUri(Uri.parse('package:foo/bang/qux.dart')),
+          equals(Uri.parse('file:///foo/bar/bang/qux.dart')));
     });
 
-    test("with a non-matching package", () {
-      expect(resolver.resolveUri("package:zap/bang/qux.dart"), isNull);
+    test('with a non-matching package', () {
+      expect(resolver.resolveUri('package:zap/bang/qux.dart'), isNull);
     });
 
-    test("with an invalid argument type", () {
+    test('with an invalid argument type', () {
       expect(() => resolver.resolveUri(12), throwsArgumentError);
     });
 
-    test("with a non-package URI", () {
+    test('with a non-package URI', () {
       expect(
-          () => resolver.resolveUri("file:///zip/zap"), throwsFormatException);
+          () => resolver.resolveUri('file:///zip/zap'), throwsFormatException);
     });
 
-    test("with an invalid package URI", () {
-      expect(() => resolver.resolveUri("package:"), throwsFormatException);
-    });
-  });
-
-  group("urlFor", () {
-    test("with a matching package and no path", () {
-      expect(resolver.urlFor("foo"), equals(Uri.parse("file:///foo/bar/")));
-      expect(resolver.urlFor("bar"),
-          equals(Uri.parse("http://dartlang.org/bar/")));
-    });
-
-    test("with a matching package and a path", () {
-      expect(resolver.urlFor("foo", "bang/qux.dart"),
-          equals(Uri.parse("file:///foo/bar/bang/qux.dart")));
-      expect(resolver.urlFor("bar", "bang/qux.dart"),
-          equals(Uri.parse("http://dartlang.org/bar/bang/qux.dart")));
-    });
-
-    test("with a non-matching package and no path", () {
-      expect(resolver.urlFor("zap"), isNull);
+    test('with an invalid package URI', () {
+      expect(() => resolver.resolveUri('package:'), throwsFormatException);
     });
   });
 
-  group("packageUriFor", () {
-    test("converts matching URIs to package:", () {
-      expect(resolver.packageUriFor("file:///foo/bar/bang/qux.dart"),
-          equals(Uri.parse("package:foo/bang/qux.dart")));
-      expect(resolver.packageUriFor("http://dartlang.org/bar/bang/qux.dart"),
-          equals(Uri.parse("package:bar/bang/qux.dart")));
+  group('urlFor', () {
+    test('with a matching package and no path', () {
+      expect(resolver.urlFor('foo'), equals(Uri.parse('file:///foo/bar/')));
+      expect(resolver.urlFor('bar'),
+          equals(Uri.parse('http://dartlang.org/bar/')));
     });
 
-    test("converts URIs with no paths", () {
-      expect(resolver.packageUriFor("file:///foo/bar"),
-          equals(Uri.parse("package:foo/")));
-      expect(resolver.packageUriFor("http://dartlang.org/bar/"),
-          equals(Uri.parse("package:bar/")));
+    test('with a matching package and a path', () {
+      expect(resolver.urlFor('foo', 'bang/qux.dart'),
+          equals(Uri.parse('file:///foo/bar/bang/qux.dart')));
+      expect(resolver.urlFor('bar', 'bang/qux.dart'),
+          equals(Uri.parse('http://dartlang.org/bar/bang/qux.dart')));
     });
 
-    test("with a URI object", () {
-      expect(resolver.packageUriFor(Uri.parse("file:///foo/bar/bang/qux.dart")),
-          equals(Uri.parse("package:foo/bang/qux.dart")));
+    test('with a non-matching package and no path', () {
+      expect(resolver.urlFor('zap'), isNull);
+    });
+  });
+
+  group('packageUriFor', () {
+    test('converts matching URIs to package:', () {
+      expect(resolver.packageUriFor('file:///foo/bar/bang/qux.dart'),
+          equals(Uri.parse('package:foo/bang/qux.dart')));
+      expect(resolver.packageUriFor('http://dartlang.org/bar/bang/qux.dart'),
+          equals(Uri.parse('package:bar/bang/qux.dart')));
     });
 
-    test("with an invalid argument type", () {
+    test('converts URIs with no paths', () {
+      expect(resolver.packageUriFor('file:///foo/bar'),
+          equals(Uri.parse('package:foo/')));
+      expect(resolver.packageUriFor('http://dartlang.org/bar/'),
+          equals(Uri.parse('package:bar/')));
+    });
+
+    test('with a URI object', () {
+      expect(resolver.packageUriFor(Uri.parse('file:///foo/bar/bang/qux.dart')),
+          equals(Uri.parse('package:foo/bang/qux.dart')));
+    });
+
+    test('with an invalid argument type', () {
       expect(() => resolver.packageUriFor(12), throwsArgumentError);
     });
   });
 
-  group("packagePath", () {
+  group('packagePath', () {
     setUp(() {
       resolver = SyncPackageResolver.config({
-        "foo": p.toUri(p.join(p.current, 'lib')),
-        "bar": Uri.parse("http://dartlang.org/bar")
+        'foo': p.toUri(p.join(p.current, 'lib')),
+        'bar': Uri.parse('http://dartlang.org/bar')
       });
     });
 
-    test("with a matching package", () {
-      expect(resolver.packagePath("foo"), equals(p.current));
-    }, testOn: "vm");
+    test('with a matching package', () {
+      expect(resolver.packagePath('foo'), equals(p.current));
+    }, testOn: 'vm');
 
-    test("with a package with a non-file scheme", () {
-      expect(resolver.packagePath("bar"), isNull);
+    test('with a package with a non-file scheme', () {
+      expect(resolver.packagePath('bar'), isNull);
     });
 
-    test("with a non-matching", () {
-      expect(resolver.packagePath("baz"), isNull);
+    test('with a non-matching', () {
+      expect(resolver.packagePath('baz'), isNull);
     });
   });
 
-  group("loadConfig", () {
+  group('loadConfig', () {
     var server;
     var sandbox;
     setUp(() async {
       sandbox =
-          (await Directory.systemTemp.createTemp("package_resolver_test")).path;
+          (await Directory.systemTemp.createTemp('package_resolver_test')).path;
     });
 
     tearDown(() async {
@@ -184,29 +184,29 @@ void main() {
       await Directory(sandbox).delete(recursive: true);
     });
 
-    test("with an http: URI", () async {
+    test('with an http: URI', () async {
       server = await shelf_io.serve((request) {
-        return shelf.Response.ok("foo:file:///foo/bar/\n"
-            "bar:http://dartlang.org/bar/");
+        return shelf.Response.ok('foo:file:///foo/bar/\n'
+            'bar:http://dartlang.org/bar/');
       }, 'localhost', 0);
 
       var resolver = await SyncPackageResolver.loadConfig(
-          "http://localhost:${server.port}");
+          'http://localhost:${server.port}');
 
       expect(
           resolver.packageConfigMap,
           equals({
-            "foo": Uri.parse("file:///foo/bar/"),
-            "bar": Uri.parse("http://dartlang.org/bar/")
+            'foo': Uri.parse('file:///foo/bar/'),
+            'bar': Uri.parse('http://dartlang.org/bar/')
           }));
       expect(resolver.packageConfigUri,
-          equals(Uri.parse("http://localhost:${server.port}")));
+          equals(Uri.parse('http://localhost:${server.port}')));
     });
 
-    test("with a file: URI", () async {
-      var packagesPath = p.join(sandbox, ".packages");
-      File(packagesPath).writeAsStringSync("foo:file:///foo/bar/\n"
-          "bar:http://dartlang.org/bar/");
+    test('with a file: URI', () async {
+      var packagesPath = p.join(sandbox, '.packages');
+      File(packagesPath).writeAsStringSync('foo:file:///foo/bar/\n'
+          'bar:http://dartlang.org/bar/');
 
       var resolver =
           await SyncPackageResolver.loadConfig(p.toUri(packagesPath));
@@ -214,46 +214,46 @@ void main() {
       expect(
           resolver.packageConfigMap,
           equals({
-            "foo": Uri.parse("file:///foo/bar/"),
-            "bar": Uri.parse("http://dartlang.org/bar/")
+            'foo': Uri.parse('file:///foo/bar/'),
+            'bar': Uri.parse('http://dartlang.org/bar/')
           }));
       expect(resolver.packageConfigUri, equals(p.toUri(packagesPath)));
     });
 
-    test("with a data: URI", () async {
-      var data = Uri.parse("data:;charset=utf-8,"
-          "foo:file:///foo/bar/%0A"
-          "bar:http://dartlang.org/bar/%0A");
+    test('with a data: URI', () async {
+      var data = Uri.parse('data:;charset=utf-8,'
+          'foo:file:///foo/bar/%0A'
+          'bar:http://dartlang.org/bar/%0A');
       var resolver = await SyncPackageResolver.loadConfig(data);
 
       expect(
           resolver.packageConfigMap,
           equals({
-            "foo": Uri.parse("file:///foo/bar/"),
-            "bar": Uri.parse("http://dartlang.org/bar/")
+            'foo': Uri.parse('file:///foo/bar/'),
+            'bar': Uri.parse('http://dartlang.org/bar/')
           }));
       expect(resolver.packageConfigUri, equals(data));
     });
 
-    test("with a package: URI", () async {
+    test('with a package: URI', () async {
       var resolver = await SyncPackageResolver.loadConfig(
-          "package:package_resolver/src/test_package_config");
+          'package:package_resolver/src/test_package_config');
 
       expect(
           resolver.packageConfigMap,
           equals({
-            "foo": Uri.parse("file:///foo/bar/"),
-            "bar": Uri.parse("http://dartlang.org/bar/")
+            'foo': Uri.parse('file:///foo/bar/'),
+            'bar': Uri.parse('http://dartlang.org/bar/')
           }));
       expect(
           resolver.packageConfigUri,
           equals(
-              Uri.parse("package:package_resolver/src/test_package_config")));
+              Uri.parse('package:package_resolver/src/test_package_config')));
     });
 
-    test("with an unsupported scheme", () {
-      expect(SyncPackageResolver.loadConfig("asdf:foo/bar"),
+    test('with an unsupported scheme', () {
+      expect(SyncPackageResolver.loadConfig('asdf:foo/bar'),
           throwsUnsupportedError);
     });
-  }, testOn: "vm");
+  }, testOn: 'vm');
 }

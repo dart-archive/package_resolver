@@ -15,30 +15,35 @@ import 'utils.dart';
 
 /// A package resolution strategy based on a package config map.
 class PackageConfigResolver implements SyncPackageResolver {
+  @override
   final packageRoot = null;
 
+  @override
   final Map<String, Uri> packageConfigMap;
 
+  @override
   Uri get packageConfigUri {
     if (_uri != null) return _uri;
 
     var buffer = StringBuffer();
-    packages_file.write(buffer, packageConfigMap, comment: "");
+    packages_file.write(buffer, packageConfigMap, comment: '');
     _uri =
-        UriData.fromString(buffer.toString(), parameters: {"charset": "utf-8"})
+        UriData.fromString(buffer.toString(), parameters: {'charset': 'utf-8'})
             .uri;
     return _uri;
   }
 
   Uri _uri;
 
+  @override
   PackageResolver get asAsync => AsyncPackageResolver(this);
 
-  String get processArgument => "--packages=$packageConfigUri";
+  @override
+  String get processArgument => '--packages=$packageConfigUri';
 
   PackageConfigResolver(Map<String, Uri> packageConfigMap, {uri})
       : packageConfigMap = _normalizeMap(packageConfigMap),
-        _uri = uri == null ? null : asUri(uri, "uri");
+        _uri = uri == null ? null : asUri(uri, 'uri');
 
   /// Normalizes the URIs in [map] to ensure that they all end in a trailing
   /// slash.
@@ -46,8 +51,9 @@ class PackageConfigResolver implements SyncPackageResolver {
       UnmodifiableMapView(
           mapMap(map, value: (_, uri) => ensureTrailingSlash(uri)));
 
+  @override
   Uri resolveUri(packageUri) {
-    var uri = asPackageUri(packageUri, "packageUri");
+    var uri = asPackageUri(packageUri, 'packageUri');
 
     var baseUri = packageConfigMap[uri.pathSegments.first];
     if (baseUri == null) return null;
@@ -62,6 +68,7 @@ class PackageConfigResolver implements SyncPackageResolver {
     return baseUri.replace(pathSegments: segments);
   }
 
+  @override
   Uri urlFor(String package, [String path]) {
     var baseUri = packageConfigMap[package];
     if (baseUri == null) return null;
@@ -69,23 +76,25 @@ class PackageConfigResolver implements SyncPackageResolver {
     return baseUri.resolve(path);
   }
 
+  @override
   Uri packageUriFor(url) {
-    url = asUri(url, "url").toString();
+    url = asUri(url, 'url').toString();
 
     // Make sure isWithin works if [url] is exactly the base.
-    var nested = p.url.join(url, "_");
+    var nested = p.url.join(url, '_');
     for (var package in packageConfigMap.keys) {
       var base = packageConfigMap[package].toString();
       if (!p.url.isWithin(base, nested)) continue;
 
       var relative = p.url.relative(url, from: base);
       if (relative == '.') relative = '';
-      return Uri.parse("package:$package/$relative");
+      return Uri.parse('package:$package/$relative');
     }
 
     return null;
   }
 
+  @override
   String packagePath(String package) {
     var lib = packageConfigMap[package];
     if (lib == null) return null;
