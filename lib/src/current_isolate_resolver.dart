@@ -31,8 +31,8 @@ class _CurrentIsolateResolver implements PackageResolver {
   @override
   Future<Uri> get packageConfigUri => Isolate.packageConfig;
 
-  // ignore: deprecated_member_use
   @override
+  // ignore: deprecated_member_use
   Future<Uri> get packageRoot => Isolate.packageRoot;
 
   @override
